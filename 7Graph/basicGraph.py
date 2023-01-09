@@ -89,76 +89,77 @@ class Graph(object):
     # start vertex is first vertex of path
     # end vertex is target of the path want to find
     def findPath(self, startVertex, endVertex, path=None):
+        
+        # check the graph is valid
         if path == None:
             path = []
+        
+        # set the graph 
         graph = self.__graphDict
+        
+        # set the list to get the path in graph
+        # recursive to add the vertex to this list 
+        # 
         path = path + [startVertex]
+
+        # if find itself return initial path 
+        # then return when it equal of start
         if startVertex == endVertex:
             return path
+        
+        # if the start point is not in graph
         if startVertex not in graph:
             return None
-        for vertex in graph[startVertex]:
-            if vertex not in path:
-                extended_path = self.findPath(vertex, 
-                                               endVertex, 
-                                               path)
-                if extended_path: 
-                    return extended_path
+
+        # find endVertex in list of startVertex (from graphDict vertex (key)) 
+        for vertext in graph[startVertex]:
+
+            # it stop when vertex in the list path is duplicate
+            if vertext not in path:
+                extendPath = self.findPath(vertext, endVertex, path)
+
+                # found the duplicate vertex
+                # end of the path
+                if extendPath:
+                    return extendPath
+        
+        # path or vertex is invalid or vertex is not have edge (not connect)
         return None
-        
-        # # check the graph is valid
-        # if path == None:
-        #     path = []
-        
-        # # set the graph 
-        # graph = self.__graphDict
-        
-        # # set the list to get the path in graph
-        # # recursive to add the vertex to this list 
-        # # 
-        # path = path + [startVertex]
-
-        # # if find itself return initial path 
-        # # then return when it equal of start
-        # if startVertex == endVertex:
-        #     return path
-        
-        # # if the start point is not in graph
-        # if startVertex not in graph:
-        #     return None
-
-        # # find endVertex in list of startVertex (from graphDict vertex (key)) 
-        # for vertext in graph[startVertex]:
-
-        #     # it stop when vertex in the list path is duplicate
-        #     if vertext not in path:
-        #         extendPath = self.findPath(vertext, endVertex, path)
-
-        #         # found the duplicate vertex
-        #         # end of the path
-        #         if extendPath:
-        #             return extendPath
-        
-        # # path or vertex is invalid or vertex is not have edge (not connect)
-        # return None
     
     # find all the path that can possible to go
-    # def findAllPaths(self, startVertex, endVertex, path = []):
+    def findAllPaths(self, startVertex, endVertex, path = []):
         
-    #     # check the graph is valid
-    #     if path == None:
-    #         path = []
+        # set the graph 
+        graph = self.__graphDict
+
+        # add the path to when found for show
+        path = path + [startVertex]
+
+        # start and end is same vertex
+        if startVertex == endVertex:
+            return [path]
+
+        # if start that not in graph
+        if startVertex not in graph:
+            return []
+
+        # collect of all possible path
+        paths = []
+
+        # access in the vertex that connect with the startVertex path
+        for vertext in graph[startVertex]:
+
+            # find the path then it not in the edge
+            if vertext not in path:
+                
+                # get all the paths by recursive of the path argument
+                extendPaths = self.findAllPaths(vertext, endVertex, path)
+
+                # collect the path that found
+                for p in extendPaths:
+                    paths.append(p)
         
-    #     # set the graph 
-    #     graph = self.__graphDict
-
-    #     # start and end is same vertex
-    #     if
-
-            
-
-    
-
+        return paths
         
 if __name__ == "__main__":
 
@@ -237,5 +238,14 @@ if __name__ == "__main__":
     path = graph.findPath("z", "e")
     print(path)
 
+    print('\nAll paths from vertex "y" to vertex "b":')
+    path = graph.findAllPaths("y", "b")
+    print(path)
 
+    print('\nAll paths from vertex "a" to vertex "c":')
+    path = graph.findAllPaths("a", "c")
+    print(path)
 
+    print('\nAll paths from vertex "z" to vertex "e":')
+    path = graph.findAllPaths("z", "e")
+    print(path)
